@@ -120,7 +120,7 @@
 
 <body>
   <main class="card">
-    <h1>✈️ 北海道自駕旅遊預算表</h1>
+    <h1>✈️ 北海道自駕旅遊預算表111</h1>
 
     <p class="intro">
       輸入預算和各項旅遊費用，
@@ -159,6 +159,12 @@
       </div>
     </div>
 
+    <div class="field">
+        <label for="rentcar">租出費用（元）</label>
+        <input id="rentcar" type="number" min="0" value="10000">
+      </div>
+    </div>
+    
     <button id="calculate" type="button">重新計算</button>
 
     <div class="results" aria-live="polite">
@@ -204,7 +210,8 @@
         getValue("food") +
         getValue("transport") +
         getValue("activities");
-
+        getValue("rentcar");
+      
       const remaining = budget - expenses;
 
       document.getElementById("total").textContent =
