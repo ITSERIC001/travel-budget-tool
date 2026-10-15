@@ -120,7 +120,7 @@
 
 <body>
   <main class="card">
-    <h1>✈️ 北海道自駕旅遊預算表111</h1>
+    <h1>✈️ 北海道自駕旅遊預算表</h1>
 
     <p class="intro">
       輸入預算和各項旅遊費用，
@@ -160,7 +160,7 @@
     </div>
 
     <div class="field">
-        <label for="rentcar">租出費用（元）</label>
+        <label for="rentcar">租車費用（元）</label>
         <input id="rentcar" type="number" min="0" value="10000">
       </div>
     </div>
@@ -209,7 +209,7 @@
         getValue("hotel") +
         getValue("food") +
         getValue("transport") +
-        getValue("activities");
+        getValue("activities")+
         getValue("rentcar");
       
       const remaining = budget - expenses;
