@@ -1,0 +1,241 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>旅遊預算計算器</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 32px 16px;
+      background: #f1f5f9;
+      color: #1e293b;
+      font-family: Arial, "Microsoft JhengHei", sans-serif;
+    }
+
+    .card {
+      max-width: 680px;
+      margin: auto;
+      padding: 28px;
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 8px 30px #0000000d;
+    }
+
+    h1 {
+      margin-top: 0;
+      color: #0f766e;
+    }
+
+    .intro {
+      color: #64748b;
+      line-height: 1.7;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 24px;
+      padding: 14px;
+      border: 0;
+      border-radius: 10px;
+      background: #0f766e;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #115e59;
+    }
+
+    .results {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .result {
+      padding: 18px;
+      border-radius: 12px;
+      background: #f0fdfa;
+    }
+
+    .result span {
+      display: block;
+      margin-bottom: 10px;
+      color: #475569;
+      font-size: 14px;
+    }
+
+    .result strong {
+      font-size: 21px;
+      overflow-wrap: anywhere;
+    }
+
+    #message {
+      line-height: 1.7;
+    }
+
+    @media (max-width: 520px) {
+      .grid,
+      .results {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="card">
+    <h1>✈️ 旅遊預算計算器</h1>
+
+    <p class="intro">
+      輸入預算和各項旅遊費用，
+      快速了解整趟旅程要花多少錢。
+    </p>
+
+    <div class="grid">
+      <div class="field">
+        <label for="budget">旅遊總預算（元）</label>
+        <input id="budget" type="number" min="0" value="100000">
+      </div>
+
+      <div class="field">
+        <label for="flight">機票費用（元）</label>
+        <input id="flight" type="number" min="0" value="30000">
+      </div>
+
+      <div class="field">
+        <label for="hotel">住宿費用（元）</label>
+        <input id="hotel" type="number" min="0" value="25000">
+      </div>
+
+      <div class="field">
+        <label for="food">餐飲費用（元）</label>
+        <input id="food" type="number" min="0" value="12000">
+      </div>
+
+      <div class="field">
+        <label for="transport">交通費用（元）</label>
+        <input id="transport" type="number" min="0" value="8000">
+      </div>
+
+      <div class="field">
+        <label for="activities">景點及購物（元）</label>
+        <input id="activities" type="number" min="0" value="10000">
+      </div>
+    </div>
+
+    <button id="calculate" type="button">重新計算</button>
+
+    <div class="results" aria-live="polite">
+      <div class="result">
+        <span>預估支出合計</span>
+        <strong id="total">NT$ 0</strong>
+      </div>
+
+      <div class="result">
+        <span>扣除支出後剩餘</span>
+        <strong id="remaining">NT$ 0</strong>
+      </div>
+    </div>
+
+    <p id="message"></p>
+  </main>
+
+  <script>
+    // 將金額格式化成台幣
+    function money(amount) {
+      return new Intl.NumberFormat("zh-TW", {
+        style: "currency",
+        currency: "TWD",
+        maximumFractionDigits: 0
+      }).format(amount);
+    }
+
+    // 取得輸入的數字
+    function getValue(id) {
+      return Math.max(
+        0,
+        Number(document.getElementById(id).value) || 0
+      );
+    }
+
+    // 計算總支出及剩餘預算
+    function calculate() {
+      const budget = getValue("budget");
+
+      const expenses =
+        getValue("flight") +
+        getValue("hotel") +
+        getValue("food") +
+        getValue("transport") +
+        getValue("activities");
+
+      const remaining = budget - expenses;
+
+      document.getElementById("total").textContent =
+        money(expenses);
+
+      const remainingElement =
+        document.getElementById("remaining");
+
+      remainingElement.textContent = money(remaining);
+
+      const message = document.getElementById("message");
+
+      if (remaining < 0) {
+        remainingElement.style.color = "#b42318";
+        message.textContent =
+          "⚠️ 已超出預算，建議調整部分支出。";
+        message.style.color = "#b42318";
+      } else {
+        remainingElement.style.color = "#0f766e";
+        message.textContent =
+          "✅ 目前仍在預算範圍內。";
+        message.style.color = "#0f766e";
+      }
+    }
+
+    // 按下按鈕時重新計算
+    document.getElementById("calculate")
+      .addEventListener("click", calculate);
+
+    // 開啟網頁時先顯示一次計算結果
+    calculate();
+  </script>
+</body>
+</html>
